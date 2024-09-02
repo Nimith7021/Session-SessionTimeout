@@ -1,0 +1,57 @@
+﻿
+@{ 
+    var expiryTime = 1;
+    var expiryTimeInSeconds = (Session.Timeout * 60);
+}
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ViewItems</title>
+    <meta http-equiv="refresh" content="@expiryTimeInSeconds;url = @Url.Action("ExpiryPage")"/>
+</head>
+<body>
+    <div>
+        <h1>View Items in cart</h1>
+        @if (ViewBag.Cart != null && ViewBag.Cart.Count > 0)
+        {
+            <ul>
+                @foreach (var item in ViewBag.Cart)
+                {
+                    <li>@item</li>
+                }
+
+
+
+            </ul>
+        }
+        else
+        {
+            <p>Cart is Empty</p>
+        }
+
+    </div>
+    <div>
+        @Html.ActionLink("Clear Cart", "ClearCart")
+        @Html.ActionLink("Add Items", "AddItems")
+    </div>
+    <div id="timer"></div>
+
+    <script>
+        var expiryTimeInSeconds = @expiryTime* 60;
+        var timer = document.getElementById('timer');
+
+        function UpdateTimer() {
+            var minutes = Math.floor(expiryTimeInSeconds / 60);
+            var seconds = expiryTimeInSeconds % 60;
+
+            timer.textContent = "Session expires in " + minutes + ":" + (seconds < 0 ? "0" : "") + seconds;
+
+            expiryTimeInSeconds--;
+        }
+
+        setInterval(UpdateTimer, 1000)
+    </script>
+</body>
+</html>
